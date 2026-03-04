@@ -1,0 +1,35 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+license="MIT"
+[[mods]]
+modId="createcoolingfan"
+version="1.0"
+displayName="Create Cooling Fan"
+authors="Chemiofitor"
+description='''
+The encased fan that can cool casting.
+'''
+[[dependencies.createcoolingfan]]
+modId="forge"
+mandatory=true
+versionRange="[47,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.createcoolingfan]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.21)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.createcoolingfan]]
+modId="create"
+mandatory=true
+versionRange="[0.5.1,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.createcoolingfan]]
+modId="tconstruct"
+mandatory=true
+versionRange="[3.10.1.0,)"
+ordering="NONE"
+side="BOTH"

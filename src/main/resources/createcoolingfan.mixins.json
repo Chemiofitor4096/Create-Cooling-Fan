@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"priority": 20000000,
+	"package": "com.chemiofitor.createcoolingfan.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"refmap": "createcoolingfan.refmap.json",
+	"mixins": [
+		"CastingContainerProcessing",
+		"InjectAirCurrent"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"minVersion": "0.8.5"
+}
