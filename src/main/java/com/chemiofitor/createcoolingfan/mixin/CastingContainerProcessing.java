@@ -1,6 +1,7 @@
 package com.chemiofitor.createcoolingfan.mixin;
 
 import com.chemiofitor.createcoolingfan.api.IFanProcessingTarget;
+import com.chemiofitor.createcoolingfan.config.CCFConfig;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -8,15 +9,15 @@ import org.spongepowered.asm.mixin.Unique;
 import slimeknights.tconstruct.library.recipe.casting.ICastingRecipe;
 import slimeknights.tconstruct.smeltery.block.entity.CastingBlockEntity;
 
-@Mixin(CastingBlockEntity.class)
+@Mixin(value = CastingBlockEntity.class, remap = false)
 public class CastingContainerProcessing implements IFanProcessingTarget {
-    @Shadow(remap = false)
+    @Shadow
     private int timer;
 
-    @Shadow(remap = false)
+    @Shadow
     private int coolingTime = -1;
 
-    @Shadow(remap = false)
+    @Shadow
     private ICastingRecipe currentRecipe;
 
     @Unique
@@ -40,7 +41,8 @@ public class CastingContainerProcessing implements IFanProcessingTarget {
 
     @Override
     public void ccf$process(FanProcessingType processingType, float speed) {
-        double factor = 1.0F;
+
+        double factor = CCFConfig.getFactor(processingType);
         double tick = Math.sqrt(Math.abs(speed) / 64.0f) * factor;
 
         int sign = tick < 0 ? -1 : 1;

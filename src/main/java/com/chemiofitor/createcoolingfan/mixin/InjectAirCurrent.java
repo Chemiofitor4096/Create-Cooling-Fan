@@ -19,24 +19,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * 对Create模组的AirCurrent类进行Mixin
  * 用于扩展风扇气流对自定义方块实体的处理逻辑
  */
-@Mixin(AirCurrent.class)
+@Mixin(value = AirCurrent.class, remap = false)
 public abstract class InjectAirCurrent {
 
-    @Shadow(remap = false)
+    @Shadow
     @Final
     public IAirCurrentSource source;
 
-    @Shadow(remap = false)
+    @Shadow
     public Direction direction;
 
-    @Shadow(remap = false)
+    @Shadow
     protected abstract int getLimit();
 
-    @Shadow(remap = false)
+    @Shadow
     public abstract FanProcessingType getTypeAt(float offset);
 
     @Inject(
-            remap = false,
             method = "tick",
             at = @At(
                     value = "INVOKE",

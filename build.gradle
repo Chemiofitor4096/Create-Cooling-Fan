@@ -170,8 +170,6 @@ publishing {
             version = "1.0"
 
             pom {
-                name = "Tinkers Gearbox"
-                description = "A lib for the Create and TiC3"
                 url = "https://github.com/Chemiofitor4096/createcoolingfan"
                 licenses {
                     license {
