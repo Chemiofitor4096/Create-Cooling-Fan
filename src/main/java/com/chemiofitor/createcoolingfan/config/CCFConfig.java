@@ -4,6 +4,7 @@ import com.chemiofitor.createcoolingfan.CreateCoolingFan;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.simibubi.create.api.registry.CreateBuiltInRegistries;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingType;
 import com.simibubi.create.content.kinetics.fan.processing.FanProcessingTypeRegistry;
 import net.minecraft.resources.ResourceLocation;
@@ -51,7 +52,7 @@ public class CCFConfig {
     }
 
     // --- Runtime cache ---
-    private static final Map<FanProcessingType, Double> FACTOR_MAP = new HashMap<>();
+    private static final Map<FanProcessingType, Double> FACTOR_MAP = new IdentityHashMap<>();
     private static double cachedDefaultFactor;
 
     public static void register() {
@@ -70,8 +71,8 @@ public class CCFConfig {
 
         // 2. Scan all registered types — auto-add any not yet in the file
         boolean dirty = false;
-        for (FanProcessingType type : FanProcessingTypeRegistry.getSortedTypesView()) {
-            ResourceLocation id = FanProcessingTypeRegistry.getId(type);
+        for (FanProcessingType type : FanProcessingTypeRegistry.SORTED_TYPES_VIEW) {
+            ResourceLocation id = CreateBuiltInRegistries.FAN_PROCESSING_TYPE.getKey(type);
             if (id == null) continue;
 
             String key = id.toString();
@@ -88,8 +89,8 @@ public class CCFConfig {
         }
 
         // 4. Build runtime lookup
-        for (FanProcessingType type : FanProcessingTypeRegistry.getSortedTypesView()) {
-            ResourceLocation id = FanProcessingTypeRegistry.getId(type);
+        for (FanProcessingType type : FanProcessingTypeRegistry.SORTED_TYPES_VIEW) {
+            ResourceLocation id = CreateBuiltInRegistries.FAN_PROCESSING_TYPE.getKey(type);
             Double factor = id != null ? fileMap.getOrDefault(id.toString(), cachedDefaultFactor) : cachedDefaultFactor;
             FACTOR_MAP.put(type, factor);
         }

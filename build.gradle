@@ -106,8 +106,10 @@ dependencies {
 
     // Create Dependencies
     modImplementation "com.tterrag.registrate:Registrate:${registrate_version}"
-    modImplementation "com.jozufozu.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}"
-    // TiC
+    modImplementation "net.createmod.ponder:Ponder-Forge-${minecraft_version}:${ponder_version}"
+    modCompileOnly "dev.engine-room.flywheel:flywheel-forge-api-${flywheel_minecraft_version}:${flywheel_version}"
+    modRuntimeOnly "dev.engine-room.flywheel:flywheel-forge-${flywheel_minecraft_version}:${flywheel_version}"
+
     modImplementation "slimeknights.mantle:Mantle:${minecraft_version}-${mantle_version}"
     modImplementation "slimeknights.tconstruct:TConstruct:${minecraft_version}-${tinker_version}"
 

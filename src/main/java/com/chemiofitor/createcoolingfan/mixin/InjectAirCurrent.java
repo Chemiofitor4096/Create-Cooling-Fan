@@ -30,7 +30,7 @@ public abstract class InjectAirCurrent {
     public Direction direction;
 
     @Shadow
-    protected abstract int getLimit();
+    public float maxDistance;
 
     @Shadow
     public abstract FanProcessingType getTypeAt(float offset);
@@ -44,8 +44,9 @@ public abstract class InjectAirCurrent {
     public void tickMixin(CallbackInfo ci) {
         Level world = source.getAirCurrentWorld();
         BlockPos start = source.getAirCurrentPos();
-        int limit = getLimit();
         float speed = source.getSpeed();
+        // getLimit() is private in Create 6.0.8, compute it directly from maxDistance
+        int limit = (float) (int) maxDistance == maxDistance ? (int) maxDistance : (int) maxDistance + 1;
         if (world != null) {
             for (int i = 1; i <= limit; i++) {
                 FanProcessingType type = getTypeAt(i - 1);
