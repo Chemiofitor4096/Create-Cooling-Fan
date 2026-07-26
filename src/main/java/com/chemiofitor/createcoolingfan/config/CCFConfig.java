@@ -52,8 +52,9 @@ public class CCFConfig {
     }
 
     // --- Runtime cache ---
-    private static final Map<FanProcessingType, Double> FACTOR_MAP = new IdentityHashMap<>();
-    private static double cachedDefaultFactor;
+    // 读多写少：onLoad时整体替换，读取端无需加锁
+    private static volatile Map<FanProcessingType, Double> factorMap = Map.of();
+    private static volatile double cachedDefaultFactor = 0.5;
 
     public static void register() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SPEC);
@@ -63,22 +64,25 @@ public class CCFConfig {
     public static void onLoad(final ModConfigEvent event) {
         if (event.getConfig().getSpec() != SPEC) return;
 
-        cachedDefaultFactor = DEFAULT_FACTOR.get();
-        FACTOR_MAP.clear();
+        double defaultFactor = DEFAULT_FACTOR.get();
+        cachedDefaultFactor = defaultFactor;
 
         // 1. Read existing JSON (or start from built-in defaults)
+        boolean exists = Files.exists(FACTORS_FILE);
         Map<String, Double> fileMap = readFactorFile();
 
         // 2. Scan all registered types — auto-add any not yet in the file
-        boolean dirty = false;
+        // 文件不存在时必须落盘一次，否则用户看不到可编辑的配置
+        boolean dirty = !exists;
         for (FanProcessingType type : FanProcessingTypeRegistry.SORTED_TYPES_VIEW) {
             ResourceLocation id = CreateBuiltInRegistries.FAN_PROCESSING_TYPE.getKey(type);
             if (id == null) continue;
 
             String key = id.toString();
-            if (!fileMap.containsKey(key)) {
+            // 显式写入的null视为缺失，避免后续拆箱NPE
+            if (fileMap.get(key) == null) {
                 Double builtIn = BUILT_IN_DEFAULTS.get(key);
-                fileMap.put(key, builtIn != null ? builtIn : cachedDefaultFactor);
+                fileMap.put(key, builtIn != null ? builtIn : defaultFactor);
                 dirty = true;
             }
         }
@@ -89,17 +93,24 @@ public class CCFConfig {
         }
 
         // 4. Build runtime lookup
+        Map<FanProcessingType, Double> map = new IdentityHashMap<>();
         for (FanProcessingType type : FanProcessingTypeRegistry.SORTED_TYPES_VIEW) {
             ResourceLocation id = CreateBuiltInRegistries.FAN_PROCESSING_TYPE.getKey(type);
-            Double factor = id != null ? fileMap.getOrDefault(id.toString(), cachedDefaultFactor) : cachedDefaultFactor;
-            FACTOR_MAP.put(type, factor);
+            Double factor = id != null ? fileMap.get(id.toString()) : null;
+            map.put(type, factor != null ? factor : defaultFactor);
         }
+        factorMap = map;
     }
 
+    /**
+     * 取得该处理类型的进度系数。类型为null（纯气流，无处理段）时回落到默认值。
+     */
     public static double getFactor(FanProcessingType type) {
+        Map<FanProcessingType, Double> map = factorMap;
         if (type == null)
-            return DEFAULT_FACTOR.get();
-        return FACTOR_MAP.getOrDefault(type, cachedDefaultFactor);
+            return cachedDefaultFactor;
+        Double factor = map.get(type);
+        return factor != null ? factor : cachedDefaultFactor;
     }
 
     // --- JSON file I/O ---

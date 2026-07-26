@@ -30,7 +30,7 @@ legacyForge {
     }
 
     mods {
-        tgears {
+        createcoolingfan {
             sourceSet sourceSets.main
         }
     }
@@ -132,6 +132,12 @@ sourceSets.main.resources {
     exclude ".cache"
 }
 
+processResources {
+    filesMatching('META-INF/mods.toml') {
+        expand 'mod_version': mod_version
+    }
+}
+
 mixin {
     add sourceSets.main, 'createcoolingfan.refmap.json'
     config 'createcoolingfan.mixins.json'
@@ -145,7 +151,7 @@ jar {
         attributes([
                 "Specification-Title"     : "createcoolingfan",
                 "Specification-Vendor"    : "chemiofitor",
-                "Specification-Version"   : "1",
+                "Specification-Version"   : project.version,
                 "Implementation-Title"    : project.name,
                 "Implementation-Version"  : project.jar.archiveVersion,
                 "Implementation-Vendor"   : "chemiofitor",
@@ -164,12 +170,15 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact jar
+            // 必须是 reobf (SRG) 产物。`jar` 的输出被 legacyForge 重定向到 build/devlibs/，
+            // 那是 named 映射的开发用 jar；发布它会导致下游 jarJar 内置后运行时
+            // NoSuchMethodError。build/libs/ 里的 reobfJar 产物才是正式 jar。
+            artifact tasks.named('reobfJar')
             artifact sourcesJar
 
             groupId = "com.chemiofitor"
             artifactId = "createcoolingfan"
-            version = "1.0"
+            version = project.version
 
             pom {
                 url = "https://github.com/Chemiofitor4096/createcoolingfan"

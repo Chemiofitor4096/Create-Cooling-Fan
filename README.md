@@ -2,8 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Minecraft](https://img.shields.io/badge/Minecraft-1.20.1-blue.svg)](https://www.minecraft.net)
-[![Forge](https://img.shields.io/badge/Forge-47.4.0-red.svg)](https://files.minecraftforge.net)
-[![Create](https://img.shields.io/badge/Create-0.5.1.j-orange.svg)](https://modrinth.com/mod/create)
+[![Forge](https://img.shields.io/badge/Forge-47.1.33-red.svg)](https://files.minecraftforge.net)
+[![Create](https://img.shields.io/badge/Create-6.0.8-orange.svg)](https://modrinth.com/mod/create)
 
 A Minecraft mod that bridges [Create](https://github.com/Creators-of-Create/Create) and [Tinkers' Construct](https://github.com/SlimeKnights/TinkersConstruct), letting encased fans interact with the casting process.
 
@@ -18,8 +18,8 @@ A Minecraft mod that bridges [Create](https://github.com/Creators-of-Create/Crea
 | Mod | Version |
 |---|---|
 | Minecraft | 1.20.1 |
-| Forge | 47.4.0+ |
-| Create | 0.5.1.j+ |
+| Forge | 47.1.33+ |
+| Create | 6.0.8+ |
 | Tinkers' Construct | 3.10.1.0+ |
 | Mantle | 1.11.81+ |
 
@@ -83,7 +83,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation "com.chemiofitor:createcoolingfan:1.0"
+    modImplementation "com.chemiofitor:createcoolingfan:1.2.1"
 }
 ```
 ## 🏗️ Building
@@ -92,7 +92,7 @@ dependencies {
 ./gradlew build
 ```
 
-The compiled jar will be at `build/libs/createcoolingfan-1.0.jar`.
+The compiled jar will be at `build/libs/createcoolingfan-1.2.1.jar`.
 
 To publish to your local Maven repository:
 ```bash

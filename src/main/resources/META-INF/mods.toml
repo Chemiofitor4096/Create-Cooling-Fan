@@ -3,7 +3,7 @@ loaderVersion="[47,)"
 license="MIT"
 [[mods]]
 modId="createcoolingfan"
-version="1.0"
+version="${mod_version}"
 displayName="Create Cooling Fan"
 authors="Chemiofitor"
 description='''
