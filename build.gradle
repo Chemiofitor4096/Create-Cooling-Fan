@@ -6,7 +6,7 @@ plugins {
 }
 
 base {
-    archivesName = "createcoolingfan"
+    archivesName = "${mod_id}-forge-${minecraft_version}"
     group = 'com.chemiofitor.createcoolingfan'
     version = "${mod_version}"
 }
@@ -176,11 +176,11 @@ publishing {
             artifact tasks.named('reobfJar')
             artifact sourcesJar
 
-            groupId = "com.chemiofitor"
-            artifactId = "createcoolingfan"
-            version = project.version
-
             pom {
+                groupId = mod_group_id
+                artifactId = mod_id
+                version = mod_version
+
                 url = "https://github.com/Chemiofitor4096/createcoolingfan"
                 licenses {
                     license {
@@ -188,6 +188,7 @@ publishing {
                         url = "https://opensource.org/licenses/MIT"
                     }
                 }
+                description = "The encased fan that can cool casting."
             }
         }
     }
